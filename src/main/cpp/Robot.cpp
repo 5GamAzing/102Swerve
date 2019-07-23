@@ -16,6 +16,28 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+Robot::Robot() {
+  //Input controller definitions
+  control1 = new frc::XboxController(0);
+  control2 = new frc::XboxController(1);
+
+  //Motor definitions
+  flMain = new frc::PWMTalonSRX(0);
+  frMain = new frc::PWMTalonSRX(2);
+  brMain = new frc::PWMTalonSRX(7);
+  blMain = new frc::PWMTalonSRX(5);
+  flTurn = new frc::PWMTalonSRX(1);
+  frTurn = new frc::PWMTalonSRX(3);
+  brTurn = new frc::PWMTalonSRX(6);
+  blTurn = new frc::PWMTalonSRX(4);
+
+  //Sensor definitions
+  flHall = new frc::Encoder(0, 1);
+  frHall = new frc::Encoder(6, 7);
+  brHall = new frc::Encoder(4, 5);
+  blHall = new frc::Encoder(2, 3);
+}
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);

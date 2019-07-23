@@ -23,7 +23,7 @@
 
 class Robot : public frc::TimedRobot {
   public:
-    //IDK
+    Robot();
     void RobotInit() override;
     void RobotPeriodic() override;
     void AutonomousInit() override;
@@ -35,24 +35,24 @@ class Robot : public frc::TimedRobot {
     void swerveDrive(int mode);
 
     //Input controller definitions
-    frc::XboxController *control1 = new frc::XboxController(0);
-    frc::XboxController *control2 = new frc::XboxController(1);
+    frc::XboxController *control1;
+    frc::XboxController *control2;
 
     //Motor definitions
-    frc::PWMTalonSRX *flMain = new frc::PWMTalonSRX(0);
-    frc::PWMTalonSRX *frMain = new frc::PWMTalonSRX(2);
-    frc::PWMTalonSRX *brMain = new frc::PWMTalonSRX(7);
-    frc::PWMTalonSRX *blMain = new frc::PWMTalonSRX(5);
-    frc::PWMTalonSRX *flTurn = new frc::PWMTalonSRX(1);
-    frc::PWMTalonSRX *frTurn = new frc::PWMTalonSRX(3);
-    frc::PWMTalonSRX *brTurn = new frc::PWMTalonSRX(6);
-    frc::PWMTalonSRX *blTurn = new frc::PWMTalonSRX(4);
+    frc::PWMTalonSRX *flMain;
+    frc::PWMTalonSRX *frMain;
+    frc::PWMTalonSRX *brMain;
+    frc::PWMTalonSRX *blMain;
+    frc::PWMTalonSRX *flTurn;
+    frc::PWMTalonSRX *frTurn;
+    frc::PWMTalonSRX *brTurn;
+    frc::PWMTalonSRX *blTurn;
 
     //Sensor definitions
-    frc::Encoder *flHall = new frc::Encoder(0, 1);
-    frc::Encoder *frHall = new frc::Encoder(6, 7);
-    frc::Encoder *brHall = new frc::Encoder(4, 5);
-    frc::Encoder *blHall = new frc::Encoder(2, 3);
+    frc::Encoder *flHall;
+    frc::Encoder *frHall;
+    frc::Encoder *brHall;
+    frc::Encoder *blHall;
 
   private:
     //No idea what this is
