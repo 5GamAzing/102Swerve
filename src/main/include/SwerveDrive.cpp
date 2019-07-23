@@ -116,25 +116,25 @@ void Robot::swerveDrive(int mode) {
     //Align wheels
     if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoder[0])
         (*flTurn).Set(0);
-    else if (((*flHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[0])
+    else if ((int)((*flHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[0])
         (*flTurn).Set(SPEED);
     else
         (*flTurn).Set(-SPEED);
     if (((*frHall).Get() + ENCODERS) % ENCODERS == targetEncoder[1])
         (*frTurn).Set(0);
-    else if (((*frHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[1])
+    else if ((int)((*frHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[1])
         (*frTurn).Set(SPEED);
     else
         (*frTurn).Set(-SPEED);
     if (((*blHall).Get() + ENCODERS) % ENCODERS == targetEncoder[2])
         (*blTurn).Set(0);
-    else if (((*blHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[2])
+    else if ((int)((*blHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[2])
         (*blTurn).Set(SPEED);
     else
         (*blTurn).Set(-SPEED);
     if (((*brHall).Get() + ENCODERS) % ENCODERS == targetEncoder[3])
         (*brTurn).Set(0);
-    else if (((*brHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[3])
+    else if ((int)((*brHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[3])
         (*brTurn).Set(SPEED);
     else
         (*brTurn).Set(-SPEED);
