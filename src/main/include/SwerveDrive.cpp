@@ -5,7 +5,7 @@
 #include "JoystickControls.cpp"
 
 #define speed 0.5
-#define encoders 40
+#define encoders 48
 
 
 /*
@@ -18,8 +18,8 @@ Modes:
 */
 void Robot::swerveDrive(int mode) {
     //Calculate stuff
-    float lAngle = angleCalc((*control1).GetX(LHand), (*control1).GetY(LHand));
-    float rAngle = angleCalc((*control1).GetX(RHand), (*control1).GetY(RHand));
+    float lAngle = angleCalc((*control1).GetX(LHand), 0-(*control1).GetY(LHand));
+    float rAngle = angleCalc((*control1).GetX(RHand), 0-(*control1).GetY(RHand));
     int targetEncoder[4];
     float targetSpeed[4], turnMagnitude[4];
     float vector1[2], vector2[4][2], finalVector[4][2];
@@ -28,7 +28,9 @@ void Robot::swerveDrive(int mode) {
         targetEncoder[1] = targetEncoder[0];
         targetEncoder[2] = targetEncoder[0];
         targetEncoder[3] = targetEncoder[0];
-        targetSpeed[0] = speed * (((*control1).GetTriggerAxis(RHand) - (*control1).GetTriggerAxis(LHand)) / 255);
+        targetSpeed[0] = speed * (((*control1).GetTriggerAxis(RHand) - (*control1).GetTriggerAxis(LHand)));
+        if (targetSpeed[0] < 0.3 && targetSpeed[0] > -0.3)
+            targetSpeed[0] = 0;
         targetSpeed[1] = targetSpeed[0];
         targetSpeed[2] = targetSpeed[0];
         targetSpeed[3] = targetSpeed[0];
@@ -38,7 +40,7 @@ void Robot::swerveDrive(int mode) {
         targetEncoder[1] = targetEncoder[0];
         targetEncoder[2] = targetEncoder[0];
         targetEncoder[3] = targetEncoder[0];
-        targetSpeed[0] = (distCalc((*control1).GetX(RHand), (*control1).GetY(RHand)) / 32767) * speed;
+        targetSpeed[0] = (distCalc((*control1).GetX(RHand), 0-(*control1).GetY(RHand))) * speed;
         targetSpeed[1] = targetSpeed[0];
         targetSpeed[2] = targetSpeed[0];
         targetSpeed[3] = targetSpeed[0];
@@ -71,7 +73,7 @@ void Robot::swerveDrive(int mode) {
     if (mode == 4) {
         //vector math shit
         vector1[0] = (*control1).GetX(RHand);
-        vector1[1] = (*control1).GetY(RHand);
+        vector1[1] = 0-(*control1).GetY(RHand);
         vector1[0] /= 32767;
         vector1[1] /= 32767;
         vector2[0][0] = cosf(turnMagnitude[0]);

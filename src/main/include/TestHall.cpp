@@ -5,23 +5,23 @@
 
 void Robot::testHall() {
   if ((*control1).GetAButton() == 1) {
-    while (((*flHall).Get()) < 10 && ((*flHall).Get()) > -10)
-      (*flTurn).Set(0.5);
+    while (((*flHall).Get()) > -10)
+      (*flTurn).Set(1);
     (*flTurn).Set(0);
   }
   if ((*control1).GetBButton() == 1) {
-    while (((*flHall).Get()) < 10 && ((*flHall).Get()) > -10)
-      (*flTurn).Set(-0.5);
+    while (((*flHall).Get()) < 10)
+      (*flTurn).Set(-1);
     (*flTurn).Set(0);
   }
   if ((*control1).GetXButton() == 1) {
-    while (((*frHall).Get()) < 10 && ((*frHall).Get()) > -10)
-      (*frTurn).Set(0.5);
+    (*frTurn).Set(1);
+  }
+  else if ((*control1).GetYButton() == 1) {
+    (*frTurn).Set(-1);
+  }
+  else {
     (*frTurn).Set(0);
   }
-  if ((*control1).GetYButton() == 1) {
-    while (((*frHall).Get()) < 10 && ((*frHall).Get()) > -10)
-      (*frTurn).Set(-0.5);
-    (*frTurn).Set(0);
-  }
+  
 }
