@@ -132,7 +132,7 @@ void Robot::swerveDrive(int mode) {
             sumVector->y = (driveVector->y + turnVector->y) / 2;
             targetEncoder[i] = angleCalc(driveVector->x, driveVector->y);
             targetSpeed[i] = driveVector->Magnitude() * SPEED;
-            driveVector->Rotate(90);
+            driveVector->Rotate(90.0);
         }
     }
 
