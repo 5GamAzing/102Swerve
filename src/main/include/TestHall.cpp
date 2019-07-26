@@ -23,5 +23,4 @@ void Robot::testHall() {
   else {
     (*frTurn).Set(0);
   }
-  
 }

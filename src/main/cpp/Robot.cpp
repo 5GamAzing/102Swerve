@@ -5,6 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+#include <stdio.h>
 #include "Robot.h"
 #include <math.h>
 
@@ -95,7 +96,7 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
-  swerveDrive(4);
+  swerveDrive(5);
 }
 
 void Robot::TestPeriodic() {}
