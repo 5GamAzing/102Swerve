@@ -169,6 +169,7 @@ void Robot::swerveDrive(int mode) {
     (*brMain).Set(targetSpeed[2]);
     (*blMain).Set(targetSpeed[3]);
 
+
     //Debugging things:
     std::cout << "Target encoders: " << targetEncoder[0] << "/" << targetEncoder[1] << "/" << targetEncoder[2] << "/" << targetEncoder[3];
     std::cout << "Current encoders: " << (*flHall).Get() << "/" << (*frHall).Get() << "/" << (*brHall).Get() << "/" << (*blHall).Get();
