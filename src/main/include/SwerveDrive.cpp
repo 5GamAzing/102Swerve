@@ -166,6 +166,9 @@ void Robot::swerveDrive(int mode) {
             targetEncoder[i] = angleCalc(driveVector->x, driveVector->y); //Calculate the angle of this vector
             targetSpeed[i] = driveVector->Magnitude() * SPEED; //Scale the speed of 
             turnVector->Rotate(-90.0); //Rotate the vector clockwise 90 degrees
+            targetEncoder[i] = angleCalc(driveVector->x, driveVector->y);
+            targetSpeed[i] = driveVector->Magnitude() * SPEED;
+            driveVector->Rotate(90.0);
         }
     }
 
