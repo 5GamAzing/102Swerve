@@ -54,6 +54,10 @@ class Robot : public frc::TimedRobot {
     frc::Encoder *brHall;
     frc::Encoder *blHall;
 
+    //Encoder variables
+    int flEnc, frEnc, brEnc, blEnc;
+    int flOffset, frOffset, brOffset, blOffset;
+
   private:
     //No idea what this is
     frc::SendableChooser<std::string> m_chooser;
