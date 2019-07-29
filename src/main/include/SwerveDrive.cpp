@@ -3,6 +3,7 @@
 
 #include "Robot.h"
 #include "JoystickControls.cpp"
+#include "Move.cpp"
 
 #include <frc/drive/Vector2d.h>
 
@@ -169,7 +170,9 @@ void Robot::swerveDrive(int mode) {
         }
     }
 
-
+    moveMotors(targetEncoder, targetSpeed, ENCODERS, SPEED);
+    
+    /*
     //Align wheels
     if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoder[0]) //If we are on target (-10 scales to ENCODERS-10 too), stop the motor
         (*flTurn).Set(0);
@@ -201,7 +204,7 @@ void Robot::swerveDrive(int mode) {
     (*frMain).Set(targetSpeed[1]);
     (*brMain).Set(targetSpeed[2]);
     (*blMain).Set(targetSpeed[3]);
-
+    */
 
     //Debugging things:
     std::cout << "Target encoders: " << targetEncoder[0] << "/" << targetEncoder[1] << "/" << targetEncoder[2] << "/" << targetEncoder[3];
