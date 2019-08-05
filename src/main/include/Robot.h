@@ -33,7 +33,7 @@ class Robot : public frc::TimedRobot {
     void TestPeriodic() override;
     void testHall();
     void swerveDrive(int mode);
-    void moveMotors(int *targetEncoders, float *targetSpeeds, int ENCODERS, int SPEED);
+    void moveMotors(int *targetEncoders, float *targetSpeeds, int ENCODERS, int SPEED, int BUFFER);
 
     //Input controller definitions
     frc::XboxController *control1;

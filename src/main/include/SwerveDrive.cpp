@@ -11,7 +11,7 @@
 
 static const float SPEED = 0.5;
 static const int ENCODERS = 48;
-
+static const int BUFFER = 25;
 
 /*
 Modes:
@@ -170,31 +170,38 @@ void Robot::swerveDrive(int mode) {
         }
     }
 
-    moveMotors(targetEncoder, targetSpeed, ENCODERS, SPEED);
+    //Robot::moveMotors(targetEncoder, targetSpeed, ENCODERS, SPEED, BUFFER);
     
-    /*
     //Align wheels
-    if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoder[0]) //If we are on target (-10 scales to ENCODERS-10 too), stop the motor
+    //if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoders[0]) //If we are on target (-10 scales to ENCODERS-10 too), stop the motor
+    if ((((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER + ENCODERS) && (((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER - ENCODERS))
         (*flTurn).Set(0);
-    else if ((int)((*flHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[0]) //If it is faster to turn the wheel right to get to target, go right, else go left
+    //else if ((int)((*flHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[0]) //If it is faster to turn the wheel right to get to target, go right, else go left
+    else if ((targetEncoder[0] > ENCODERS / 2 && (*flHall).Get() < targetEncoder[0]) || (targetEncoder[0] < ENCODERS / 2 && (*flHall).Get() > targetEncoder[0])) //If it is faster to turn the wheel right to get to target, go right, else go left
         (*flTurn).Set(SPEED);
     else
         (*flTurn).Set(-SPEED);
-    if (((*frHall).Get() + ENCODERS) % ENCODERS == targetEncoder[1])
+    //if (((*frHall).Get() + ENCODERS) % ENCODERS == targetEncoder[1])
+    if ((((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER + ENCODERS) && (((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER - ENCODERS))
         (*frTurn).Set(0);
-    else if ((int)((*frHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[1])
+    //else if ((int)((*frHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[1])
+    else if ((targetEncoder[1] > ENCODERS / 2 && (*frHall).Get() < targetEncoder[1]) || (targetEncoder[1] < ENCODERS / 2 && (*frHall).Get() > targetEncoder[1]))
         (*frTurn).Set(SPEED);
     else
         (*frTurn).Set(-SPEED);
-    if (((*blHall).Get() + ENCODERS) % ENCODERS == targetEncoder[2])
+    //if (((*brHall).Get() + ENCODERS) % ENCODERS == targetEncoder[2])
+    if ((((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER + ENCODERS) && (((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER - ENCODERS))
         (*blTurn).Set(0);
-    else if ((int)((*blHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[2])
+    //else if ((int)((*brHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[2])
+    else if ((targetEncoder[2] > ENCODERS / 2 && (*brHall).Get() < targetEncoder[2]) || (targetEncoder[2] < ENCODERS / 2 && (*brHall).Get() > targetEncoder[2]))
         (*blTurn).Set(SPEED);
     else
         (*blTurn).Set(-SPEED);
-    if (((*brHall).Get() + ENCODERS) % ENCODERS == targetEncoder[3])
+    //if (((*blHall).Get() + ENCODERS) % ENCODERS == targetEncoder[3])
+    if ((((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER + ENCODERS) && (((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER - ENCODERS))
         (*brTurn).Set(0);
-    else if ((int)((*brHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[3])
+    //else if ((int)((*blHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[3])
+    else if ((targetEncoder[3] > ENCODERS / 2 && (*blHall).Get() < targetEncoder[3]) || (targetEncoder[3] < ENCODERS / 2 && (*blHall).Get() > targetEncoder[3]))
         (*brTurn).Set(SPEED);
     else
         (*brTurn).Set(-SPEED);
@@ -204,7 +211,7 @@ void Robot::swerveDrive(int mode) {
     (*frMain).Set(targetSpeed[1]);
     (*brMain).Set(targetSpeed[2]);
     (*blMain).Set(targetSpeed[3]);
-    */
+    
 
     //Debugging things:
     std::cout << "Target encoders: " << targetEncoder[0] << "/" << targetEncoder[1] << "/" << targetEncoder[2] << "/" << targetEncoder[3];

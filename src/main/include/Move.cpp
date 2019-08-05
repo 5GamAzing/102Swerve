@@ -12,7 +12,7 @@ int ENCODERS: the amount of encoders in a full rotation
 int SPEED: the speed at which motors should turn the wheel at (range from 0.1 to 1)
 */
 
-void Robot::moveMotors(int *targetEncoders, float *targetSpeeds, int ENCODERS, int SPEED) {
+void Robot::moveMotors(int *targetEncoders, float *targetSpeeds, int ENCODERS, int SPEED, int BUFFER) {
     //Align wheels
     if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoders[0]) //If we are on target (-10 scales to ENCODERS-10 too), stop the motor
         (*flTurn).Set(0);
