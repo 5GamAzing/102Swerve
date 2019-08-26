@@ -10,7 +10,7 @@ float angleCalc(float x, float y) {
     if (y == 0)
         angle = 90.0;
     else
-        angle = atanf(abs(x)/abs(y)); //may be asinf, not quite sure yet
+        angle = atanf(abs(x)/abs(y) * (M_PI / 180)); //may be asinf, not quite sure yet
     if (x < 0 && y < 0) {
         angle += 180;
     }

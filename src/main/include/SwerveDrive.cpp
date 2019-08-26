@@ -5,12 +5,13 @@
 #include "JoystickControls.cpp"
 #include "Move.cpp"
 
+#include <math.h>
 #include <frc/drive/Vector2d.h>
 
 #include <iostream>
 
 static const float SPEED = 0.5;
-static const int ENCODERS = 48;
+static const int ENCODERS = 360;
 static const int BUFFER = 25;
 
 /*
@@ -67,7 +68,7 @@ void Robot::swerveDrive(int mode) {
         targetEncoder[3] = targetEncoder[0];
         //Find target speed
         targetSpeed[0] = SPEED * (((*control1).GetTriggerAxis(RHand) - (*control1).GetTriggerAxis(LHand)));
-        if (targetSpeed[0] < 0.3 && targetSpeed[0] > -0.3) //Stop range
+        if (targetSpeed[0] < 0.2 && targetSpeed[0] > -0.2) //Stop range
             targetSpeed[0] = 0;
         targetSpeed[1] = targetSpeed[0];
         targetSpeed[2] = targetSpeed[0];
@@ -126,14 +127,14 @@ void Robot::swerveDrive(int mode) {
         vector1[0] = (*control1).GetX(RHand);
         vector1[1] = 0-(*control1).GetY(RHand);
         //Scale from degrees to x and y values ranging 0-1 (reverse angleCalc basically)
-        vector2[0][0] = cosf(turnMagnitude[0]);
-        vector2[0][1] = sinf(turnMagnitude[0]);
-        vector2[1][0] = cosf(turnMagnitude[1]);
-        vector2[1][1] = sinf(turnMagnitude[1]);
-        vector2[2][0] = cosf(turnMagnitude[2]);
-        vector2[2][1] = sinf(turnMagnitude[2]);
-        vector2[3][0] = cosf(turnMagnitude[3]);
-        vector2[3][1] = sinf(turnMagnitude[3]);
+        vector2[0][0] = cosf(turnMagnitude[0] * (M_PI / 180));
+        vector2[0][1] = sinf(turnMagnitude[0] * (M_PI / 180));
+        vector2[1][0] = cosf(turnMagnitude[1] * (M_PI / 180));
+        vector2[1][1] = sinf(turnMagnitude[1] * (M_PI / 180));
+        vector2[2][0] = cosf(turnMagnitude[2] * (M_PI / 180));
+        vector2[2][1] = sinf(turnMagnitude[2] * (M_PI / 180));
+        vector2[3][0] = cosf(turnMagnitude[3] * (M_PI / 180));
+        vector2[3][1] = sinf(turnMagnitude[3] * (M_PI / 180));
         //Add the two vectors for each wheel
         finalVector[0][0] = vector1[0] + vector2[0][0];
         finalVector[0][1] = vector1[1] + vector2[0][1];
@@ -159,8 +160,10 @@ void Robot::swerveDrive(int mode) {
     if (mode == 5) {
         driveVector->x = control1->GetX(RHand);
         driveVector->y = 0 - control1->GetY(RHand);
-        turnVector->x = cosf(((*control1).GetX(LHand) * 45) + 45);
-        turnVector->y = sinf(((*control1).GetX(LHand) * 45) + 45);
+        //turnVector->x = cosf(((*control1).GetX(LHand) * 45) + 45);
+        turnVector->x = cosf((((*control1).GetX(LHand) * 45) + 45) * (M_PI / 180));
+        //turnVector->y = sinf(((*control1).GetX(LHand) * 45) + 45);
+        turnVector->y = sinf((((*control1).GetX(LHand) * 45) + 45) * (M_PI / 180));
         for (int i = 0; i < 4; i++) { //For each wheel:
             sumVector->x = (driveVector->x + turnVector->x) / 2; //Add the two vectors to get one final vector
             sumVector->y = (driveVector->y + turnVector->y) / 2;

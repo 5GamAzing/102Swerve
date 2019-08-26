@@ -10,5 +10,6 @@
     "bin/": true,
     ".classpath": true,
     ".project": true
-  }
+  },
+  "C_Cpp.default.configurationProvider": "vscode-wpilib"
 }
