@@ -12,7 +12,7 @@
 
 static const float SPEED = 0.5;
 static const int ENCODERS = 360;
-static const int BUFFER = 25;
+static const int BUFFER = 60;
 
 /*
 Modes:
@@ -127,14 +127,14 @@ void Robot::swerveDrive(int mode) {
         vector1[0] = (*control1).GetX(RHand);
         vector1[1] = 0-(*control1).GetY(RHand);
         //Scale from degrees to x and y values ranging 0-1 (reverse angleCalc basically)
-        vector2[0][0] = cosf(turnMagnitude[0] * (M_PI / 180));
-        vector2[0][1] = sinf(turnMagnitude[0] * (M_PI / 180));
-        vector2[1][0] = cosf(turnMagnitude[1] * (M_PI / 180));
-        vector2[1][1] = sinf(turnMagnitude[1] * (M_PI / 180));
-        vector2[2][0] = cosf(turnMagnitude[2] * (M_PI / 180));
-        vector2[2][1] = sinf(turnMagnitude[2] * (M_PI / 180));
-        vector2[3][0] = cosf(turnMagnitude[3] * (M_PI / 180));
-        vector2[3][1] = sinf(turnMagnitude[3] * (M_PI / 180));
+        vector2[0][0] = cosf(turnMagnitude[0]) * 57.2958;
+        vector2[0][1] = sinf(turnMagnitude[0]) * 57.2958;
+        vector2[1][0] = cosf(turnMagnitude[1]) * 57.2958;
+        vector2[1][1] = sinf(turnMagnitude[1]) * 57.2958;
+        vector2[2][0] = cosf(turnMagnitude[2]) * 57.2958;
+        vector2[2][1] = sinf(turnMagnitude[2]) * 57.2958;
+        vector2[3][0] = cosf(turnMagnitude[3]) * 57.2958;
+        vector2[3][1] = sinf(turnMagnitude[3]) * 57.2958;
         //Add the two vectors for each wheel
         finalVector[0][0] = vector1[0] + vector2[0][0];
         finalVector[0][1] = vector1[1] + vector2[0][1];
@@ -161,9 +161,9 @@ void Robot::swerveDrive(int mode) {
         driveVector->x = control1->GetX(RHand);
         driveVector->y = 0 - control1->GetY(RHand);
         //turnVector->x = cosf(((*control1).GetX(LHand) * 45) + 45);
-        turnVector->x = cosf((((*control1).GetX(LHand) * 45) + 45) * (M_PI / 180));
+        turnVector->x = cosf(((*control1).GetX(LHand) * 45) + 45) * 57.2958;
         //turnVector->y = sinf(((*control1).GetX(LHand) * 45) + 45);
-        turnVector->y = sinf((((*control1).GetX(LHand) * 45) + 45) * (M_PI / 180));
+        turnVector->y = sinf(((*control1).GetX(LHand) * 45) + 45) * 57.2958;
         for (int i = 0; i < 4; i++) { //For each wheel:
             sumVector->x = (driveVector->x + turnVector->x) / 2; //Add the two vectors to get one final vector
             sumVector->y = (driveVector->y + turnVector->y) / 2;
@@ -177,37 +177,41 @@ void Robot::swerveDrive(int mode) {
     
     //Align wheels
     //if (((*flHall).Get() + ENCODERS) % ENCODERS == targetEncoders[0]) //If we are on target (-10 scales to ENCODERS-10 too), stop the motor
-    if ((((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER + ENCODERS) && (((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER - ENCODERS))
-        (*flTurn).Set(0);
+    //if ((((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] - BUFFER + ENCODERS) && (((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER || ((*flHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[0] + BUFFER - ENCODERS))
+    if (((targetEncoder[0] >= BUFFER && targetEncoder[0] < 360 - BUFFER) && (*flHall).Get() > targetEncoder[0] - BUFFER && (*flHall).Get() < targetEncoder[0] + BUFFER) || ((targetEncoder[0] < 180) && ((*flHall).Get() > targetEncoder[0] - BUFFER + 360 || (*flHall).Get() < targetEncoder[0] + BUFFER)) || ((targetEncoder[0] > 180) && ((*flHall).Get() > targetEncoder[0] - BUFFER || (*flHall).Get() < targetEncoder[0] + BUFFER - 360)))
+        (*flTurn).Set(0.1);
     //else if ((int)((*flHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[0]) //If it is faster to turn the wheel right to get to target, go right, else go left
     else if ((targetEncoder[0] > ENCODERS / 2 && (*flHall).Get() < targetEncoder[0]) || (targetEncoder[0] < ENCODERS / 2 && (*flHall).Get() > targetEncoder[0])) //If it is faster to turn the wheel right to get to target, go right, else go left
-        (*flTurn).Set(SPEED);
-    else
         (*flTurn).Set(-SPEED);
+    else
+        (*flTurn).Set(SPEED);
     //if (((*frHall).Get() + ENCODERS) % ENCODERS == targetEncoder[1])
-    if ((((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER + ENCODERS) && (((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER - ENCODERS))
-        (*frTurn).Set(0);
+    //if ((((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] - BUFFER + ENCODERS) && (((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER || ((*frHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[1] + BUFFER - ENCODERS))
+    if (((targetEncoder[1] >= BUFFER && targetEncoder[1] < 360 - BUFFER) && (*frHall).Get() > targetEncoder[1] - BUFFER && (*frHall).Get() < targetEncoder[1] + BUFFER) || ((targetEncoder[1] < 180) && ((*frHall).Get() > targetEncoder[1] - BUFFER + 360 || (*frHall).Get() < targetEncoder[1] + BUFFER)) || ((targetEncoder[1] > 180) && ((*frHall).Get() > targetEncoder[1] - BUFFER || (*frHall).Get() < targetEncoder[1] + BUFFER - 360)))
+        (*frTurn).Set(0.1);
     //else if ((int)((*frHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[1])
     else if ((targetEncoder[1] > ENCODERS / 2 && (*frHall).Get() < targetEncoder[1]) || (targetEncoder[1] < ENCODERS / 2 && (*frHall).Get() > targetEncoder[1]))
-        (*frTurn).Set(SPEED);
-    else
         (*frTurn).Set(-SPEED);
+    else
+        (*frTurn).Set(SPEED);
     //if (((*brHall).Get() + ENCODERS) % ENCODERS == targetEncoder[2])
-    if ((((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER + ENCODERS) && (((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER - ENCODERS))
-        (*blTurn).Set(0);
+    //if ((((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] - BUFFER + ENCODERS) && (((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER || ((*brHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[2] + BUFFER - ENCODERS))
+    if (((targetEncoder[2] >= BUFFER && targetEncoder[2] < 360 - BUFFER) && (*brHall).Get() > targetEncoder[2] - BUFFER && (*brHall).Get() < targetEncoder[2] + BUFFER) || ((targetEncoder[2] < 180) && ((*brHall).Get() > targetEncoder[2] - BUFFER + 360 || (*brHall).Get() < targetEncoder[2] + BUFFER)) || ((targetEncoder[2] > 180) && ((*brHall).Get() > targetEncoder[2] - BUFFER || (*brHall).Get() < targetEncoder[2] + BUFFER - 360)))
+        (*blTurn).Set(0.1);
     //else if ((int)((*brHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[2])
     else if ((targetEncoder[2] > ENCODERS / 2 && (*brHall).Get() < targetEncoder[2]) || (targetEncoder[2] < ENCODERS / 2 && (*brHall).Get() > targetEncoder[2]))
-        (*blTurn).Set(SPEED);
-    else
         (*blTurn).Set(-SPEED);
+    else
+        (*blTurn).Set(SPEED);
     //if (((*blHall).Get() + ENCODERS) % ENCODERS == targetEncoder[3])
-    if ((((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER + ENCODERS) && (((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER - ENCODERS))
-        (*brTurn).Set(0);
+    //if ((((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] - BUFFER + ENCODERS) && (((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER || ((*blHall).Get() + ENCODERS * 2) % ENCODERS >= targetEncoder[3] + BUFFER - ENCODERS))
+    if (((targetEncoder[3] >= BUFFER && targetEncoder[3] < 360 - BUFFER) && (*blHall).Get() > targetEncoder[3] - BUFFER && (*blHall).Get() < targetEncoder[3] + BUFFER) || ((targetEncoder[3] < 180) && ((*blHall).Get() > targetEncoder[3] - BUFFER + 360 || (*blHall).Get() < targetEncoder[3] + BUFFER)) || ((targetEncoder[3] > 180) && ((*blHall).Get() > targetEncoder[3] - BUFFER || (*blHall).Get() < targetEncoder[3] + BUFFER - 360)))
+        (*brTurn).Set(0.1);
     //else if ((int)((*blHall).Get() + (ENCODERS * 1.5)) % ENCODERS < targetEncoder[3])
     else if ((targetEncoder[3] > ENCODERS / 2 && (*blHall).Get() < targetEncoder[3]) || (targetEncoder[3] < ENCODERS / 2 && (*blHall).Get() > targetEncoder[3]))
-        (*brTurn).Set(SPEED);
-    else
         (*brTurn).Set(-SPEED);
+    else
+        (*brTurn).Set(SPEED);
     
     //Set drive motors to their respective speeds
     (*flMain).Set(targetSpeed[0]);
@@ -219,4 +223,6 @@ void Robot::swerveDrive(int mode) {
     //Debugging things:
     std::cout << "Target encoders: " << targetEncoder[0] << "/" << targetEncoder[1] << "/" << targetEncoder[2] << "/" << targetEncoder[3];
     std::cout << "Current encoders: " << (*flHall).Get() << "/" << (*frHall).Get() << "/" << (*brHall).Get() << "/" << (*blHall).Get();
+    printf("Target encoders: %d/%d/%d/%d\n", targetEncoder[0], targetEncoder[1], targetEncoder[2], targetEncoder[3]);
+    printf("Current encoders: %d/%d/%d/%d\n", (*flHall).Get(), (*frHall).Get(), (*brHall).Get(), (*blHall).Get());
 }
